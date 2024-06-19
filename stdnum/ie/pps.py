@@ -28,6 +28,7 @@ non-individuals, such as limited companies, trusts, partnerships
 and unincorporated bodies)
 Pre-2013 values may have 'W' as the second letter which was for 
 married women; it is ignored by the check.
+As of 2024, B was accepted as a second letter on all new PPS numbers.
 
 >>> validate('6433435F')  # pre-2013
 '6433435F'
