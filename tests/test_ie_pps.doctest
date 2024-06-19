@@ -64,15 +64,11 @@ InvalidChecksum: ...
 '1234567WH'
 >>> pps.validate('1234567OB') # 2013 format 2024 B-range 
 '1234567OB'
-
 >>> validate('6433435VH')  # 2013 format (incorrect check)
 Traceback (most recent call last):
     ...
 InvalidChecksum: ...
 
-
-
-
-The validate() function should check with old format if last letter is W or T.
+The validate() function should check with old format if last letter is W.
 >>> pps.validate('1234567TW')
 '1234567TW'
