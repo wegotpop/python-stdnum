@@ -23,10 +23,9 @@
 The Personal Public Service number consists of 7 digits, and one or
 two letters. The first letter is a check character.
 When present (which should be the case for new numbers as of 2013),
-the second letter can be 'A' (for individuals) or 'H' (for
-non-individuals, such as limited companies, trusts, partnerships
-and unincorporated bodies). Pre-2013 values may have 'W', 'T',
-or 'X' as the second letter ; it is ignored by the check.
+the second letter can be any letter between A and V. 
+Pre-2013 values may have 'W' as the second letter which was for 
+married women; it is ignored by the check.
 
 >>> validate('6433435F')  # pre-2013
 '6433435F'
@@ -55,7 +54,7 @@ from stdnum.ie import vat
 from stdnum.util import clean
 
 
-pps_re = re.compile(r'^\d{7}[A-W][AHWTX]?$')
+pps_re = re.compile(r'^\d{7}[A-W][A-W]?$')
 """Regular expression used to check syntax of PPS numbers."""
 
 
@@ -71,12 +70,13 @@ def validate(number):
     number = compact(number)
     if not pps_re.match(number):
         raise InvalidFormat()
-    if len(number) == 9 and number[8] in 'AH':
-        # new 2013 format
+
+    # If new 2013 format (excludes old format 2nd character W for married woman)     
+    if len(number) == 9 and number[8] in 'ABCDEFGHIJKLMNOPQRSTUV':
         if number[7] != vat.calc_check_digit(number[:7] + number[8:]):
             raise InvalidChecksum()
     else:
-        # old format, last letter ignored
+        # old format, last letter ignored 
         if number[7] != vat.calc_check_digit(number[:7]):
             raise InvalidChecksum()
     return number
