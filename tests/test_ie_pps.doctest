@@ -1,0 +1,74 @@
+test_ie_pps.doctest - more detailed doctests for stdnum.ie.pps module
+
+Copyright (C) 2016 Arthur de Jong
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA
+
+
+This file contains more detailed doctests for the stdnum.ie.vat module. It
+tries to cover more corner cases and detailed functionality that is not
+really useful as module documentation.
+
+>>> from stdnum.ie import pps
+
+
+Extra tests for length checking and corner cases:
+
+>>> pps.validate('111222333')  # check number should contain letters
+Traceback (most recent call last):
+    ...
+InvalidFormat: ...
+
+>>> pps.validate('1234567ABC')  # too long
+Traceback (most recent call last):
+    ...
+InvalidFormat: ...
+
+>>> pps.validate('1234567XX')  # invalid letters
+Traceback (most recent call last):
+    ...
+InvalidFormat: ...
+
+
+The validate() function should check with old & new formats
+
+>>> validate('6433435F')  # pre-2013
+'6433435F'
+>>> validate('6433435FW')  # pre-2013 format for married women
+'6433435FW'
+>>> validate('6433435E')  # incorrect check digit
+Traceback (most recent call last):
+    ...
+InvalidChecksum: ...
+
+>>> validate('6433435OA')  # 2013 format (personal)
+'6433435OA'
+>>> pps.validate('1234567FA')
+'1234567FA'
+>>> validate('6433435IH')  # 2013 format (non-personal)
+'6433435IH'
+>>> pps.validate('1234567WH')
+'1234567WH'
+>>> pps.validate('1234567OB') # 2013 format 2024 B-range 
+'1234567OB'
+>>> validate('6433435VH')  # 2013 format (incorrect check)
+Traceback (most recent call last):
+    ...
+InvalidChecksum: ...
+
+The validate() function should check with old format if last letter is W.
+>>> pps.validate('1234567TW')
+'1234567TW'
